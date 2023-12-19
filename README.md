@@ -8,10 +8,13 @@ Pytorch T5
 
 ## Prerequisites
 pip install pytorch-lightning
+
 pip install transformers
+
+Note: Need python 3.11.x
 
 ## Timeline
 12/18/2023 - Project started
 
 
-Note: Need python 3.11.x
+
