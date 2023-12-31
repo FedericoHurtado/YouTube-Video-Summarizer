@@ -15,6 +15,6 @@ Note: Need python 3.11.x
 
 ## Timeline
 12/18/2023 - Project started
-
+12/31/2023 - Training and optimizing initial model
 
 
