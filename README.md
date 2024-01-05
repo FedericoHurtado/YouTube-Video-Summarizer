@@ -1,17 +1,21 @@
-# BasicTextSummarizer
-Currently learning how to create a basic text summarizer. I am planning on building this up as a 
-useful tool for students to summarize long lectures.
+# YouTube Video Summarizer
+
+## Current Functionality
+- Leveraged youtube_transcript_api, deepmultilingualpunctuation libraries to retrive and pre process a text transcript from a YouTube video URL.
+- Used transformers library to create a comprehensive summary of the transcript that was created.
 
 
 ## Timeline
 12/18/2023 - Project started
 
-12/31/2023 - Training and optimizing initial model
+12/20/2023 - 1/1/2024 - Experimented and researched possible solutions
 
-1/4/24 - Created python script to summarize youtube videos from a url using multiple packages.
+1/4/24 -Finalized inital model using a TextSummarizerModel and a helper method to extract transcripts from youtube url
 
 
 ## Next steps
+- Allow user functionality 
+- Protect against errors to prevent crashes
 - Optimize/improve summarizer (in progress)
 - Create python script to deploy summarizer (in progress)
 - Create model to turn text summary into formatted markdown 
