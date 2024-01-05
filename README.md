@@ -3,6 +3,7 @@
 ## Current Functionality
 - Leveraged youtube_transcript_api, deepmultilingualpunctuation libraries to retrive and pre process a text transcript from a YouTube video URL.
 - Used transformers library to create a comprehensive summary of the transcript that was created.
+- Thoroughly checked for any possible exceptions and to prevent crashing (assuming prerequisite libraries are installed)
 
 
 ## Timeline
@@ -15,7 +16,6 @@
 
 ## Next steps
 - Allow user functionality 
-- Protect against errors to prevent crashes
 - Optimize/improve summarizer (in progress)
 - Create python script to deploy summarizer (in progress)
 - Create model to turn text summary into formatted markdown 

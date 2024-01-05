@@ -39,7 +39,11 @@ class TextSummarizerModel:
         # pass sentence chunks on to summarizer for work
         text_summary = self.model(sentence_chunks, max_length = 120, min_length = 30, do_sample = False) 
 
+        # Check if the summary is a valid JSON object with the required "summary_text" field
+        if not all(isinstance(item, dict) and 'summary_text' in item for item in text_summary):
+            raise ValueError("Invalid summary format")
+
         # Concatenate all the "summary_text" fields
-        concatenated_summary = ' '.join(item['summary_text'] for item in text_summary)
-        
+        concatenated_summary = ' '.join(item['summary_text'] for item in text_summary) # need to add error check in case of bad returns
+
         return concatenated_summary
