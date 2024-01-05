@@ -1,5 +1,10 @@
 # YouTube Video Summarizer
 
+## Prerequisites
+- pip install youtube-transcript-api
+- pip install deepmultilingualpunctuation
+- pip install transformers
+
 ## Current Functionality
 - Leveraged youtube_transcript_api, deepmultilingualpunctuation libraries to retrive and pre process a text transcript from a YouTube video URL.
 - Used transformers library to create a comprehensive summary of the transcript that was created.
