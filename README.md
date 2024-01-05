@@ -20,7 +20,6 @@
 
 
 ## Next steps
-- Allow user functionality 
 - Optimize/improve summarizer (in progress)
 - Create python script to deploy summarizer (in progress)
 - Create model to turn text summary into formatted markdown 
