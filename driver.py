@@ -27,7 +27,7 @@ def get_video_transcript(video_url):
     except Exception as e:
         # Catch any exceptions and print the error message
         print(f"Error retrieving transcript: {e}")
-        raise ValueError("Issue retrieving transcript from this URL")  # Return None to signal an error condition
+        raise ValueError("Issue retrieving transcript from this URL")
 
     # concatenate the groups of text sent by YouTubeTranscriptApi
     transcript_raw = ' '.join(item['text'] for item in transcript_raw) # need to add error check in case of bad returns
@@ -37,8 +37,6 @@ def get_video_transcript(video_url):
 
     # return the punctuated transcript
     return punctuation_model.restore_punctuation(transcript_raw)
-
-
 
 
 
@@ -53,7 +51,7 @@ if __name__ == "__main__":
         user_input = input("Enter YouTube URL for summarization. Enter 'Exit' if you wish to exit the program: ")
 
         if user_input.lower() == "exit":
-            exit()  # exit program command
+            exit()  # exit program 
 
         try:
             # step 2: get text from the YouTube URL
@@ -66,10 +64,3 @@ if __name__ == "__main__":
         except ValueError as e:  # catch errors
             print(f"Error: {e}")
             url_transcript = ""
-        
-    
-
-
-
-
-
