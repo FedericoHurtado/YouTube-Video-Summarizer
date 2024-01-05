@@ -12,8 +12,7 @@ useful tool for students to summarize long lectures.
 
 
 ## Next steps
-- Enable fetching of youtube transcripts 
-- Optimize/improve summarizer
-- Create python script to deploy summarizer
+- Optimize/improve summarizer (in progress)
+- Create python script to deploy summarizer (in progress)
 - Create model to turn text summary into formatted markdown 
 - Create front end
