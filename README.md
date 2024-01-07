@@ -1,5 +1,7 @@
 # YouTube Video Summarizer
 
+Design Doc: https://quip.com/JoG6A3vjmYez/YouTube-Summarizer
+
 ## Prerequisites
 - pip install youtube-transcript-api
 - pip install deepmultilingualpunctuation
