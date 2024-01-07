@@ -16,12 +16,29 @@ class TextSummarizerModel:
         # split text into list of sentences
         text_sentences = [sentence.strip() for sentence in text.split('<eos>') if sentence.strip()]
 
+        sentence_chunks = self.chunk_text(text_sentences)
+
+        # pass sentence chunks on to summarizer for work
+        text_summary = self.model(sentence_chunks, max_length = 120, min_length = 30, do_sample = False) 
+
+        # Check if the summary is a valid JSON object with the required "summary_text" field
+        if not all(isinstance(item, dict) and 'summary_text' in item for item in text_summary):
+            raise ValueError("Invalid summary format")
+
+        # Concatenate all the "summary_text" fields
+        concatenated_summary = ' '.join(item['summary_text'] for item in text_summary) 
+
+        return concatenated_summary
+    
+
+
+    def chunk_text(self, sentences):
         # create chunks of sentences with cumulative word length < 500 to send to model
         max_chunk_len = 500
         sentence_chunks = []
         chunk_index = 0
         
-        for sentence in text_sentences:
+        for sentence in sentences:
             if len(sentence_chunks) == chunk_index + 1: # check if there is a current chunk
                 if len(sentence_chunks[chunk_index]) + len(sentence.split(' ')) <= max_chunk_len: # if sentence can be added to current chunk do so
                     sentence_chunks[chunk_index].extend(sentence.split(' ')) # add words to current chunk
@@ -36,14 +53,4 @@ class TextSummarizerModel:
         for curr_chunk in range(len(sentence_chunks)):
             sentence_chunks[curr_chunk] = ' '.join(sentence_chunks[curr_chunk])
 
-        # pass sentence chunks on to summarizer for work
-        text_summary = self.model(sentence_chunks, max_length = 120, min_length = 30, do_sample = False) 
-
-        # Check if the summary is a valid JSON object with the required "summary_text" field
-        if not all(isinstance(item, dict) and 'summary_text' in item for item in text_summary):
-            raise ValueError("Invalid summary format")
-
-        # Concatenate all the "summary_text" fields
-        concatenated_summary = ' '.join(item['summary_text'] for item in text_summary) # need to add error check in case of bad returns
-
-        return concatenated_summary
+        return sentence_chunks
