@@ -31,7 +31,9 @@ class TextSummarizerModel:
         return concatenated_summary
     
 
-
+    '''
+    Method: chunk text by the x consecutive sentences that cumulatively have less than 500 words.
+    '''
     def chunk_text(self, sentences):
         # create chunks of sentences with cumulative word length < 500 to send to model
         max_chunk_len = 500

@@ -22,7 +22,6 @@ Design Doc: https://quip.com/JoG6A3vjmYez/YouTube-Summarizer
 
 
 ## Next steps
-- Optimize/improve summarizer (in progress)
-- Create python script to deploy summarizer (in progress)
-- Create model to turn text summary into formatted markdown 
+- Fine tune summarizing model (in progress)
 - Create front end
+- Find ways to improve output format
