@@ -1,58 +1,48 @@
-from transformers import pipeline
+from transformers import BigBirdPegasusForConditionalGeneration, AutoTokenizer
+
+'''
+BigBird citation
+@misc{zaheer2021big,
+      title={Big Bird: Transformers for Longer Sequences}, 
+      author={Manzil Zaheer and Guru Guruganesh and Avinava Dubey and Joshua Ainslie and Chris Alberti and Santiago Ontanon and Philip Pham and Anirudh Ravula and Qifan Wang and Li Yang and Amr Ahmed},
+      year={2021},
+      eprint={2007.14062},
+      archivePrefix={arXiv},
+      primaryClass={cs.LG}
+}
+'''
+
 
 class TextSummarizerModel:
 
     def __init__(self):
-        self.model = pipeline('summarization') # import a summarization model
+        self.model = BigBirdPegasusForConditionalGeneration.from_pretrained("google/bigbird-pegasus-large-bigpatent")
+        self.tokenizer = AutoTokenizer.from_pretrained("google/bigbird-pegasus-large-bigpatent")
 
     def summarize(self, text):
-        
-        #  add indicators for end of sentence to split
-        text = text.replace('.', ".<eos>")
-        text = text.replace('!', "!<eos>")
-        text = text.replace('?', "?<eos>")
-        text = text.replace('\n', "<eos>")
 
-        # split text into list of sentences
-        text_sentences = [sentence.strip() for sentence in text.split('<eos>') if sentence.strip()]
+        chunk_size = 4096 # number of tokens to pass to model at once
+        text_chunks = [text[i:i+chunk_size] for i in range(0, len(text), chunk_size)]
 
-        sentence_chunks = self.chunk_text(text_sentences)
+        # generate summaries for each chunk
+        summaries = []
 
-        # pass sentence chunks on to summarizer for work
-        text_summary = self.model(sentence_chunks, max_length = 120, min_length = 30, do_sample = False) 
+        '''
+        BigBird comes with 2 implementations: original_full & block_sparse. For the sequence length < 1024, 
+        using original_full is advised as there is no benefit in using block_sparse attention.
+        '''
+        if len(text_chunks[0]) < 1024:
+            print("using original full")
+            inputs = self.tokenizer(text_chunks[0], return_tensors='pt', truncation=True)
+            prediction = self.model.generate(**inputs)
+            summary = self.tokenizer.batch_decode(prediction, skip_special_tokens=True, attention_type = "original_full")[0]
+            summaries.append(summary)
+        else:
+            for chunk in text_chunks:
+                inputs = self.tokenizer(chunk, return_tensors='pt', truncation=True)
+                prediction = self.model.generate(**inputs, no_repeat_ngram_size=3)
+                summary = self.tokenizer.batch_decode(prediction, skip_special_tokens=True)[0]
+                summaries.append(summary)
 
-        # Check if the summary is a valid JSON object with the required "summary_text" field
-        if not all(isinstance(item, dict) and 'summary_text' in item for item in text_summary):
-            raise ValueError("Invalid summary format")
-
-        # Concatenate all the "summary_text" fields
-        concatenated_summary = ' '.join(item['summary_text'] for item in text_summary) 
-
-        return concatenated_summary
-    
-
-    '''
-    Method: chunk text by the x consecutive sentences that cumulatively have less than 500 words.
-    '''
-    def chunk_text(self, sentences):
-        # create chunks of sentences with cumulative word length < 500 to send to model
-        max_chunk_len = 500
-        sentence_chunks = []
-        chunk_index = 0
-        
-        for sentence in sentences:
-            if len(sentence_chunks) == chunk_index + 1: # check if there is a current chunk
-                if len(sentence_chunks[chunk_index]) + len(sentence.split(' ')) <= max_chunk_len: # if sentence can be added to current chunk do so
-                    sentence_chunks[chunk_index].extend(sentence.split(' ')) # add words to current chunk
-                else: # create new chunk
-                    chunk_index += 1
-                    sentence_chunks.append(sentence.split(' '))
-            else: # create a new chunk if there is not a current one
-                sentence_chunks.append(sentence.split(' ')) # protects agains no sentences in inital read
-
-
-        # join indidual words back into consecutive text for each chunk
-        for curr_chunk in range(len(sentence_chunks)):
-            sentence_chunks[curr_chunk] = ' '.join(sentence_chunks[curr_chunk])
-
-        return sentence_chunks
+        # return summarizes of each chunk
+        return summaries

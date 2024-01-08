@@ -3,10 +3,18 @@ from youtube_transcript_api import YouTubeTranscriptApi
 from deepmultilingualpunctuation import PunctuationModel
 
 
-def get_video_transcript(video_url):
+def format_output(summaries):
+    output = ""
+    for i in range(0, len(summaries)):
+        output += "- " + summaries[i] + "\n"
+    return output
+
+
+def get_video_transcript(video_url, punctuation_model):
 
     # note: video has v= URL parameter, shorts do not
     # TODO: add youtube short accessbility
+    # note: video can have an "&t" parameter for time, does not affect api call, but should be told to the user
 
     # obtain video id from video URL ("?v=[video_id]"")
     video_parts = video_url.split("?v=")
@@ -32,9 +40,6 @@ def get_video_transcript(video_url):
     # concatenate the groups of text sent by YouTubeTranscriptApi
     transcript_raw = ' '.join(item['text'] for item in transcript_raw) # need to add error check in case of bad returns
 
-    # add punctuation to the transcript using the deepmultilingualpunctuation package
-    punctuation_model = PunctuationModel()
-
     # return the punctuated transcript
     return punctuation_model.restore_punctuation(transcript_raw)
 
@@ -45,6 +50,7 @@ if __name__ == "__main__":
     # step 1: instantiate summarizer model
     print("Initializing model.....")
     text_summarizer_model = TextSummarizerModel()
+    punctuation_model = PunctuationModel()
     print("Summarizer model created")
 
     while True:
@@ -55,12 +61,13 @@ if __name__ == "__main__":
 
         try:
             # step 2: get text from the YouTube URL
-            url_transcript = get_video_transcript(user_input)
+            url_transcript = get_video_transcript(user_input, punctuation_model)
 
             # step 3: pass transcript through summarizer model
             summary = text_summarizer_model.summarize(url_transcript)
+            summary_output = format_output(summary)
             print("-----------------------------")
-            print("SUMMARY: ", summary)
+            print(summary_output)
         except ValueError as e:  # catch errors
             print(f"Error: {e}")
             url_transcript = ""

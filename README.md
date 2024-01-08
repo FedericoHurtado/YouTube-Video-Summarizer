@@ -6,6 +6,7 @@ Design Doc: https://quip.com/JoG6A3vjmYez/YouTube-Summarizer
 - pip install youtube-transcript-api
 - pip install deepmultilingualpunctuation
 - pip install transformers
+- pip install sentencepiece
 
 ## Current Functionality
 - Leveraged youtube_transcript_api, deepmultilingualpunctuation libraries to retrive and pre process a text transcript from a YouTube video URL.
@@ -18,10 +19,12 @@ Design Doc: https://quip.com/JoG6A3vjmYez/YouTube-Summarizer
 
 12/20/2023 - 1/1/2024 - Experimented and researched possible solutions
 
-1/4/24 -Finalized inital model using a TextSummarizerModel and a helper method to extract transcripts from youtube url
+1/4/24 -Finalized initial model using a TextSummarizerModel and a helper method to extract transcripts from youtube url
+
+1/8/2024 - Deployed updated model using BigBirdPegasusForConditionalGeneration
 
 
 ## Next steps
-- Fine tune summarizing model (in progress)
+- Fine tune summarizing model (in progress) -> trying models in huggingface to see which works best for me
 - Create front end
 - Find ways to improve output format
