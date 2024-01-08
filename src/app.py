@@ -1,5 +1,5 @@
 from flask import Flask, render_template, request, jsonify
-from TextSummarizerModel import TextSummarizerModel
+from src.TextSummarizerModel import TextSummarizerModel
 from youtube_transcript_api import YouTubeTranscriptApi
 from deepmultilingualpunctuation import PunctuationModel
 
