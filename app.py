@@ -53,15 +53,17 @@ def index():
 
 @app.route('/summarize', methods=['POST'])
 def summarize():
-    video_url = request.form.get('video_url')
+    return jsonify({'success': True, 'summary': "Test summary"})
+
+    # video_url = request.form.get('video_url')
     
-    try:
-        transcript = get_video_transcript(video_url, punctuation_model)
-        summary = text_summarizer_model.summarize(transcript)
-        formatted_summary = format_output(summary)
-        return jsonify({'success': True, 'summary': formatted_summary})
-    except ValueError as e:
-        return jsonify({'success': False, 'error': str(e)})
+    # try:
+    #     transcript = get_video_transcript(video_url, punctuation_model)
+    #     summary = text_summarizer_model.summarize(transcript)
+    #     formatted_summary = format_output(summary)
+    #     return jsonify({'success': True, 'summary': formatted_summary})
+    # except ValueError as e:
+    #     return jsonify({'success': False, 'error': str(e)})
 
 if __name__ == '__main__':
     # Initialize your summarizer and punctuation models here
